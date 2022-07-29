@@ -1,0 +1,95 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block body %}
+	{{ parent() }}
+    <h1 class="titre">Backoffice - GMI</h1>
+
+    <nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="{{ path('backoffice') }}">Accueil</a></li>
+			<li class="breadcrumb-item active" aria-current="page">Utilisateurs</li>
+		</ol>
+	</nav>
+
+   <div class="main row me-0 pt-1 pb-1">
+
+        <div class="row me-0 pe-0">
+            
+            <form id="filtre_utilisateur" class="col-auto" action="{{ path('backoffice_utilisateurs') }}">
+
+                <div class="row">
+                    <div class="col-auto">
+                        <label for="keyword">Mot Clé :</label>
+                        <input id="keyword" class="search-q form-control" name="keyword" value="{{keyword}}" type="text">
+                    </div>
+
+                    <div class="col-auto">
+                        <label for="categorie">Role :</label>
+                        <select class="form-select" name="role" id="edit_categ">
+                            <option value="">-- Choisir un role --</option>
+                            {% for key, leRole in lesRoles %}
+                                {% if key == role %}
+                                    <option value="{{key}}" selected>{{leRole}}</option>
+                                {% else %}
+                                    <option value="{{key}}">{{leRole}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="col-auto btn btn-primary btn-color" style="margin-top: 1.5rem; margin-left: 0.8rem;"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </form>
+
+            <a href="{{ path('backoffice_create_utilisateur') }}" class="btn btn-primary btn-color ms-auto col-auto mb-3" style="width: fit-content; margin-top: 1.5rem;">Ajouter un utilisateur</a>
+        
+        </div>
+
+        {% for user in users %}
+            <div class="col-12 col-md-6 col-xl-4 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        {% for role in user.roles %}
+                            {% if role == "ROLE_ADMIN" %}
+                                <span class="text-color">Admin</span>
+                            {% else %}
+                                <span class="text-color">Utilisateur</span>
+                            {% endif %}
+                        {% endfor %}
+                        <div id="delete-{{user.id}}" title="Supprimer l'utilisateur {{user}}" class="float-end mt-1" type="submit"  data-bs-toggle="modal" data-bs-target="#delete_user_{{user.id}}"><i class="fa-solid fa-trash iconDelete"></i></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center mb-3">
+                            <img class="materiel-img img-fluid rounded w-auto" src="{{ asset(uploads_images ~ 'user.png') }}" alt="image anonyme de l'utilisateur">
+                        </div>
+                        <span class="text-color">{{user}}</span>
+                        <div class="row">
+                            <span class="col col-md-auto">{{user.email}}</span>
+                        </div>
+                        
+                        <a href="{{ path('backoffice_edit_utilisateur', { 'id': user.id }) }}" class="btn btn-primary btn-color mt-2">Éditer</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade formItem" id="delete_user_{{user.id}}" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Supprimer cet utilisateur ?</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <a href="{{path('backoffice_delete_utilisateur', { 'id': user.id })}}" type="button" class="btn btn-danger" id="valid_delete">Supprimer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="d-flex justify-content-center">{{ knp_pagination_render(users) }}</div>
+	</div>
+
+    
+{% endblock %}

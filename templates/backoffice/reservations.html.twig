@@ -1,0 +1,135 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block head %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+    <h1 class="titre">Backoffice - GMI</h1>
+
+    <div id="toasts"></div>
+
+    <nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="{{ path('backoffice') }}">Accueil</a></li>
+			<li class="breadcrumb-item active" aria-current="page">Reservations</li>
+		</ol>
+	</nav>
+
+   <div class="main row me-0 pt-1 pb-1">
+
+        <div class="row me-0 pe-0">
+            
+            <form id="filtre_materiel col-auto" class="col-auto" action="{{ path('backoffice_reservations') }}">
+
+                <div class="row">
+                    <div class="col-auto">
+                        <label for="keyword">Mot Clé :</label>
+                        <input id="keyword" class="search-q form-control" name="keyword" value="{{keyword}}" type="text">
+                    </div>
+
+                    <div class="col-auto">
+                        <label for="categorie">Catégorie :</label>
+                        <select class="form-select" name="categorie" id="edit_categ">
+                            <option value="">-- Choisir une catégorie --</option>
+                            {% for categ in lesCateg %}
+                                {% if categorie == categ.id %}
+                                    <option value="{{categ.id}}" selected>{{categ.libelle}}</option>
+                                {% else %}
+                                    <option value="{{categ.id}}">{{categ.libelle}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-auto">
+                        <label for="categorie">Utilisateur :</label>
+                        <select class="form-select" name="utilisateur" id="edit_user">
+                            <option value="">-- Choisir un utilisateur --</option>
+                            {% for user in lesUsers %}
+                                {% if utilisateur == user.id %}
+                                    <option value="{{user.id}}" selected>{{user}}</option>
+                                {% else %}
+                                    <option value="{{user.id}}">{{user}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="col-auto btn btn-primary btn-color" style="margin-top: 1.5rem; margin-left: 0.8rem;"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </form>
+        </div>
+
+        {% for reservation in reservations %}
+            <div class="col-12 col-md-6 col-xl-4 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        {{reservation.idMateriel.libelle}} - {{reservation.idMateriel.categorie}}
+                        <div id="delete-{{reservation.id}}" title="Supprimer la réservation pour {{reservation.idMateriel.libelle}}" class="float-end mt-1" type="submit"  data-bs-toggle="modal" data-bs-target="#delete_item_{{reservation.id}}"><i class="fa-solid fa-trash iconDelete"></i></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center mb-3">
+                            <img class="materiel-img img-fluid rounded" {% if reservation.idMateriel.image %} src="{{ asset(uploads_images ~ reservation.idMateriel.image) }}" {% else %} src="{{ asset(uploads_images ~ 'materiel_base.png') }}"{% endif %} alt="image du materiel">
+                        </div>
+                        {% if "now"|date('Y-m-d H:i:s') < reservation.fin|date('Y-m-d H:i:s') and "now"|date('Y-m-d H:i:s') > reservation.debut|date('Y-m-d H:i:s') %}
+                            <div class="status badge bg-success" style="width: fit-content">
+                                En cours
+                            </div>
+                        {% endif %}
+                        {% if "now"|date('Y-m-d H:i:s') > reservation.fin|date('Y-m-d H:i:s') %}
+                            <div class="status badge bg-danger" style="width: fit-content">
+                                Terminée
+                            </div>
+                        {% endif %}
+                        {% if "now"|date('Y-m-d H:i:s') < reservation.fin|date('Y-m-d H:i:s') and "now"|date('Y-m-d H:i:s') < reservation.debut|date('Y-m-d H:i:s') %}
+                            <div class="status badge bg-warning text-dark" style="width: fit-content">
+                                À venir
+                            </div>
+                        {% endif %}
+                        <span class="mt-1">Réservation faite par <span class="text-color">{{reservation.idUser}}</span></span>
+                        <div class="d-flex align-items-center">
+                            <span class="mt-1 color">Du <span id="{{reservation.id}}-debut" data-debut="{{reservation.debut|date('Y-m-d H:i:s')}}" class="fw-bold">{{reservation.debut|date('d/m/Y')}}</span> à partir de <span id="{{reservation.id}}-debut-hour" class="fw-bold">{{reservation.debut|date('H:i')}}</span>  jusqu'au <span id="{{reservation.id}}-fin" data-fin="{{reservation.fin|date('Y-m-d H:i:s')}}" class="fw-bold">{{reservation.fin|date('d/m/Y')}}</span> à <span id="{{reservation.id}}-fin-hour" class="fw-bold">{{reservation.fin|date('H:i')}}</span></span>
+                        </div>
+                        <a href="{{path('backoffice_edit_reservation', { 'id': reservation.id })}}" type="submit" class="btn btn-primary btn-color mt-2 edit-event-google" id="{{reservation.id}}edit" data-bs-toggle="modal" data-bs-target="#edit_event_google" data-id="{{reservation.id}}" data-route="{{path('backoffice_edit_reservation', { 'id': reservation.id })}}">Éditer</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade formItem" id="delete_item_{{reservation.id}}" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Supprimer cette réservation ?</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <a href="{{path('backoffice_delete_reservation', { 'id': reservation.id })}}" type="button" class="btn btn-danger" id="valid_delete">Supprimer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="d-flex justify-content-center">{{ knp_pagination_render(reservations) }}</div>
+	</div>
+
+    <div class="modal fade formItem" id="edit_event_google" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="height: auto">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier la réservation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{{ parent() }}
+
+    {% include 'includes/nav.html.twig' %}
+
+    <div id="toasts"></div>
+
+    <a href="{{ path('categorie', { 'id': materiel.categorie.id }) }}">
+        <div type="button" class="arrow_back" style="width: 80px !important">
+            <span>
+                <p style="font-size: 2em; margin-top: 9px" class="fas fa-arrow-left"></p>
+            </span>
+        </div>
+    </a>
+
+    <div class="container mt-3">
+        <div class="details">
+            <img class="details_img" {% if materiel.image %} src="{{ asset(uploads_images ~ materiel.image) }}" {% else %} src="{{ asset(uploads_images ~ 'materiel_base.png') }}"{% endif %} alt="image du materiel">
+            <div class="description">
+                <span class="details_titre">{{materiel.libelle}}</span>
+                <span class="details_categorie">Catégorie : {{materiel.categorie.libelle}}</span>
+                <div class="details_dispo">
+                    <span class="disponibilite d-flex align-items-center">Disponibilité : {% if materiel.disponible == 1 %} <i class="fa-solid fa-check iconValid mt-2"> {% else %} <i class="fa-solid fa-xmark iconUnvalid mt-2"> {% endif %} </i></span>
+                    <span class="reservation d-flex align-items-center">Réservation : {% if materiel.reservation == 1 %} <i class="fa-solid fa-check iconValid mt-2"> {% else %} <i class="fa-solid fa-xmark iconUnvalid mt-2"> {% endif %} </i> </span>
+                </div>
+                <button type="submit" class="btn_reservation" data-bs-toggle="modal" data-bs-target="#reservation_materiel" {% if materiel.reservation == 0 %} disabled id="disable_button" {% endif %}>Réserver</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="reservation_materiel" tabindex="-1" aria-labelledby="reservation_materiel_Label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="nom_materiel_reservation">Réservation pour : {{materiel.libelle}}</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="responsive-iframe-container small-container">
+                        <iframe id="google-calendar" src="https://calendar.google.com/calendar/embed?src=robin.projet.icademie%40gmail.com&ctz=Europe%2FParis" class="img-fluid" style="border-width:0" width="100%" frameborder="0" scrolling="no"></iframe>
+                    </div>
+                    <div class="right-side">
+                        {{ form_start(form) }}
+                            <div class="my-custom-class-for-errors">
+                                {{ form_errors(form) }}
+                            </div>
+
+                            <div class="dates">
+                                <div class="col">
+                                    {{ form_rest(form) }}
+                                </div>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+	{% include 'includes/footer.html.twig' %}
+{% endblock %}

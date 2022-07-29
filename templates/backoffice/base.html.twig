@@ -1,0 +1,102 @@
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/backoffice.css') }}"/>
+    <script defer src="{{ asset('assets/js/custom.js') }}"></script>
+    <meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<!-- Robots -->
+	<meta name="robots" content="noindex, nofollow">
+	<!-- Device -->
+	<!-- <meta name="viwport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"> -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5"> 
+    <meta name="format-detection" content="telephone=no">
+	<!-- Title -->
+	<title>Backoffice GMI</title>
+	<!-- Social -->
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image"> <meta name="twitter:title" content="Quick Parcel Project — Home">
+	<meta name="twitter:description" content="Home description.">
+	<meta
+	name="twitter:image" content="#">
+	<!-- Facebook -->
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://www.example.com">
+	<meta property="og:title" content="Quick Parcel Project — Home">
+	<meta property="og:description" content="Home description.">
+	<meta property="og:image" content="#">
+	<meta property="og:image:width" content="1200">
+	<meta
+	property="og:image:height" content="630">
+	<!-- Favicon -->
+	<meta name="theme-color" content="#fff">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fanwood+Text:ital@0;1&family=Tenor+Sans&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/png" href="{{ asset('assets/images/Logo_Projet1_DM.png') }}"/>
+
+	<!-- Bootstrap -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JS/JQuery -->
+	<script defer src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+{% block body %}
+    <nav class="sidebar">
+        <ul>
+            <li class="mb-2">
+                <a href="{{ path('backoffice') }}">
+                    <i class="fa fa-home fa-2x"></i>
+                    <span class="nav-text">
+                        Dashboard
+                    </span>
+                </a>
+
+            </li>
+            <li class="mb-2">
+                <a href="{{ path('backoffice_materiels') }}">
+                    <i class="fa fa-solid fa-laptop fa-2x"></i>
+                    <span class="nav-text">
+                        Matériels
+                    </span>
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="{{ path('backoffice_utilisateurs') }}">
+                    <i class="fa fa-solid fa-users fa-2x"></i>
+                    <span class="nav-text">
+                        Utilisateurs
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('backoffice_reservations') }}">
+                    <i class="fa fa-solid fa-calendar-days fa-2x"></i>
+                    <span class="nav-text">
+                        Réservations
+                    </span>
+                </a>
+            </li>
+        </ul>
+
+        <ul class="logout">
+            <li>
+                <a href="{{ path('accueil') }}">
+                    <i class="fa fa-solid fa-right-to-bracket fa-2x"></i>
+                    <span class="nav-text">
+                        Retour au site
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('app_logout') }}">
+                    <i class="fa fa-power-off fa-2x"></i>
+                    <span class="nav-text">
+                        Déconnexion
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}

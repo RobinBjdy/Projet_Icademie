@@ -1,0 +1,50 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block body %}
+	{{ parent() }}
+	<h1 class="titre">Backoffice - GMI</h1>
+
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item active">Accueil</li>
+		</ol>
+	</nav>
+
+    <div class="main row me-0">
+		<div class="col-12 col-md-6 col-xl-4 mb-4">
+			<div class="card">
+				<div class="card-header">
+					Materiels
+				</div>
+				<div class="card-body">
+					<i class="fa fa-solid fa-laptop fa-2x mb-3"></i>
+					<a href="{{ path('backoffice_materiels') }}" class="btn btn-primary btn-color mt-5">Voir tous les matériels</a>
+				</div>
+			</div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4 mb-4">
+			<div class="card">
+				<div class="card-header">
+					Utilisateurs
+				</div>
+				<div class="card-body">
+					<i class="fa fa-solid fa-users fa-2x mb-3"></i>
+					<a href="{{ path('backoffice_utilisateurs') }}" class="btn btn-primary btn-color mt-5">Voir tous les utilisateurs</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-12 col-md-6 col-xl-4 mb-4">
+			<div class="card">
+				<div class="card-header">
+					Réservations
+				</div>
+				<div class="card-body">
+					<i class="fa fa-solid fa-calendar-days fa-2x mb-3"></i>
+					<a href="{{ path('backoffice_reservations') }}" class="btn btn-primary btn-color mt-5">Voir toutes les réservations</a>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

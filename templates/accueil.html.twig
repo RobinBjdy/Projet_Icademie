@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{{ parent() }}
+	
+	{% include 'includes/nav.html.twig' %}
+
+	<h1 class="titre">{{titre}}</h1>
+
+	<div class="row form-materiel">
+		<form id="filtre_materiel" class="col-auto p-0" action="{{ path('accueil') }}">
+
+			<div class="row">
+				<div class="col-auto">
+					<label for="keyword">Mot Clé :</label>
+					<input id="keyword" class="search-q form-control" name="keyword" value="{{keyword}}" type="text">
+				</div>
+
+				<div class="col-auto">
+					<label for="categorie">Catégorie :</label>
+					<select class="form-select" name="categorie" id="edit_categ">
+						<option value="">-- Choisir une catégorie --</option>
+						{% for categ in lesCateg %}
+							{% if categorie == categ.id %}
+								<option value="{{categ.id}}" selected>{{categ.libelle}}</option>
+							{% else %}
+								<option value="{{categ.id}}">{{categ.libelle}}</option>
+							{% endif %}
+						{% endfor %}
+					</select>
+				</div>
+
+				<div class="col-auto">
+					<label for="dispo">Disponible :</label>
+					<select class="form-select" name="dispo" id="edit_dispo">
+						<option value="">-- Choisir --</option>
+						{% if dispo == 1 %}
+							<option value="1" selected>Oui</option>
+							<option value="0">Non</option>
+						{% else %}
+							{% if dispo != null %}
+								<option value="1">Oui</option>
+								<option value="0" selected>Non</option>
+							{% else %}
+								<option value="1">Oui</option>
+								<option value="0">Non</option>
+							{% endif %}
+						{% endif %}
+					</select>
+				</div>
+
+				<div class="col-auto">
+					<label for="reserv">Réservable :</label>
+					<select class="form-select" name="reserv" id="edit_reserv">
+						<option value="">-- Choisir --</option>
+						{% if reserv == 1 %}
+							<option value="1" selected>Oui</option>
+							<option value="0">Non</option>
+						{% else %}
+							{% if reserv != null %}
+								<option value="1">Oui</option>
+								<option value="0" selected>Non</option>
+							{% else %}
+								<option value="1">Oui</option>
+								<option value="0">Non</option>
+							{% endif %}
+						{% endif %}
+					</select>
+				</div>
+
+				<button type="submit" class="col-auto btn btn-primary btn-color-front" style="margin-top: 1.5rem; margin-left: 0.8rem;"><i class="fa-solid fa-magnifying-glass"></i></button>
+			</div>
+		</form>
+	</div>
+
+	<div class="legende">
+		<span>Matériel</span>
+		<span>Catégorie</span>
+		<span>Disponibilité/Réservation</span>
+		<span>Libelle</span>
+	</div>
+
+	{% if materiels is not empty %}
+		{% for materiel in materiels %}
+			<a id="{{materiel.id}}" class="item text-decoration-none" href="{{ path('materiel', { 'id': materiel.id }) }}">
+				<span><img class="image" {% if materiel.image %} src="{{ asset(uploads_images ~ materiel.image) }}" {% else %} src="{{ asset(uploads_images ~ 'materiel_base.png') }}"{% endif %} alt="image du materiel"></span>
+				<span data-label="Catégorie :" class="categorie">{{materiel.categorie.libelle}}</span>
+				<div class="dispo">
+					<span class="disponibilite">Disponibilité {% if materiel.disponible == 1 %} <i class="fa-solid fa-check iconValid"> {% else %} <i class="fa-solid fa-xmark iconUnvalid"> {% endif %} </i></span>
+					<span class="reservation">Réservation {% if materiel.reservation == 1 %} <i class="fa-solid fa-check iconValid"> {% else %} <i class="fa-solid fa-xmark iconUnvalid"> {% endif %} </i> </span>
+				</div>
+				<span data-label="Libelle :" class="libelle">{{materiel.libelle }}</span>
+			</a>
+		{% endfor %}
+	{% else %}
+	<div class="form-materiel mt-2">
+		Aucuns materiels
+	</div>
+	{% endif %}
+
+	<div class="d-flex justify-content-center">{{ knp_pagination_render(materiels) }}</div>
+
+{% endblock %}
+
+{% block footer %}
+	{% include 'includes/footer.html.twig' %}
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block head %}
+    {{ parent() }}
+    <script defer src="{{ asset('assets/js/script.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+
+    {% include 'includes/nav.html.twig' %}
+
+    <h1 class="titre">{{titre}}</h1>
+
+    <div id="toasts"></div>
+
+    <div id="addItem" class="buttonAdd" type="submit" data-bs-toggle="modal" data-bs-target="#add_item"><i class="fa-solid fa-plus"></i></div>
+
+    <div class="legende">
+        <span>Matériel</span>
+        <span>Catégorie</span>
+        <span>Disponibilité/Réservation</span>
+        <span>Libelle</span>
+    </div>
+
+    <label class="filterTitle" for="filterCateg">Filtrer la catégorie :</label>
+    <div class="filter">
+        <select name="filter_categ" id="filterCateg" class="form-select" style="width: fit-content">
+            <option value="">Tout selectionner</option>
+            <option value="2">Téléphonique</option>
+            <option value="1">Réseau</option>
+            <option value="3">Desktop</option>
+            <option value="4">Réunion</option>
+        </select>
+    </div>
+
+    <div id="items">
+
+    </div>
+
+    <div class="modal fade formItem" id="add_item" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ajouter un équipement</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAdd" onsubmit="event.preventDefault()">
+                        <label for="name">Nom :</label>
+                        <input class="form-control" type="text" id="name" name="name_item" required>
+
+                        <label for="categ">Catégorie :</label>
+
+                        <select class="form-select" name="categ_item" id="categ" required>
+                            <option value="2">Téléphonique</option>
+                            <option value="1">Réseau</option>
+                            <option value="3">Desktop</option>
+                            <option value="4">Réunion</option>
+                        </select>
+
+                        <label for="loaned">Disponible :</label>
+                        <input class="form-check" type="checkbox" id="loaned" name="loaned_item">
+
+                        <label for="image">Insérer l'url d'une image :</label>
+                        <input class="form-control" type="text" id="image" name="image_item">
+
+                        <img class="image_preview" src="" alt=""> <br>
+
+                        <input class="btn btn-primary mt-2" type="submit" onclick="addItem()" value="Valider">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade formItem" id="edit_item" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Éditer un équipement</h5>
+                    <button id="close" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEdit" onsubmit="event.preventDefault()">
+                        <label for="name">Nom :</label>
+                        <input class="form-control" type="text" id="edit_name" name="name_item" required>
+
+                        <label for="categ">Catégorie</label>
+
+                        <select class="form-select" name="categ_item" id="edit_categ" required>
+                            <option value="2">Téléphonique</option>
+                            <option value="1">Réseau</option>
+                            <option value="3">Desktop</option>
+                            <option value="4">Réunion</option>
+                        </select>
+
+                        <label for="loaned">Disponible</label>
+                        <input class="form-check" type="checkbox" id="edit_loaned" name="loaned_item">
+
+                        <label for="edit_image">Insérer l'url d'une image :</label>
+                        <input class="form-control" type="text" id="edit_image" name="image_item">
+
+                        <img class="image_preview" src="" alt=""> <br>
+
+                        <input class="btn btn-primary mt-2" id="valid_edit" type="submit" value="Valider">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade formItem" id="delete_item" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Supprimer cet équipement ?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-danger" id="valid_delete">Supprimer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+	{% include 'includes/footer.html.twig' %}
+{% endblock %}

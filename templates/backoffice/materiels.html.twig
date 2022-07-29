@@ -1,0 +1,127 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block body %}
+	{{ parent() }}
+    <h1 class="titre">Backoffice - GMI</h1>
+
+    <nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="{{ path('backoffice') }}">Accueil</a></li>
+			<li class="breadcrumb-item active" aria-current="page">Matériels</li>
+		</ol>
+	</nav>
+
+   <div class="main row me-0 pt-1 pb-1">
+
+        <div class="row me-0 pe-0">
+            
+            <form id="filtre_materiel col-auto" class="col-auto" action="{{ path('backoffice_materiels') }}">
+
+                <div class="row">
+                    <div class="col-auto">
+                        <label for="keyword">Mot Clé :</label>
+                        <input id="keyword" class="search-q form-control" name="keyword" value="{{keyword}}" type="text">
+                    </div>
+
+                    <div class="col-auto">
+                        <label for="categorie">Catégorie :</label>
+                        <select class="form-select" name="categorie" id="edit_categ">
+                            <option value="">-- Choisir une catégorie --</option>
+                            {% for categ in lesCateg %}
+                                {% if categorie == categ.id %}
+                                    <option value="{{categ.id}}" selected>{{categ.libelle}}</option>
+                                {% else %}
+                                    <option value="{{categ.id}}">{{categ.libelle}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-auto">
+                        <label for="dispo">Disponible :</label>
+                        <select class="form-select" name="dispo" id="edit_dispo">
+                            <option value="">-- Choisir --</option>
+                            {% if dispo == 1 %}
+                                <option value="1" selected>Oui</option>
+                                <option value="0">Non</option>
+                            {% else %}
+                                {% if dispo != null %}
+                                    <option value="1">Oui</option>
+                                    <option value="0" selected>Non</option>
+                                {% else %}
+                                    <option value="1">Oui</option>
+                                    <option value="0">Non</option>
+                                {% endif %}
+                            {% endif %}
+                        </select>
+                    </div>
+
+                    <div class="col-auto">
+                        <label for="reserv">Réservable :</label>
+                        <select class="form-select" name="reserv" id="edit_reserv">
+                            <option value="">-- Choisir --</option>
+                            {% if reserv == 1 %}
+                                <option value="1" selected>Oui</option>
+                                <option value="0">Non</option>
+                            {% else %}
+                                {% if reserv != null %}
+                                    <option value="1">Oui</option>
+                                    <option value="0" selected>Non</option>
+                                {% else %}
+                                    <option value="1">Oui</option>
+                                    <option value="0">Non</option>
+                                {% endif %}
+                            {% endif %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="col-auto btn btn-primary btn-color" style="margin-top: 1.5rem; margin-left: 0.8rem;"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </form>
+
+            <a href="{{ path('backoffice_create_materiel') }}" class="btn btn-primary btn-color ms-auto col-auto mb-3" style="width: fit-content; margin-top: 1.5rem;">Ajouter un matériel</a>
+        </div>
+
+        {% for materiel in materiels %}
+            <div class="col-12 col-md-6 col-xl-4 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        {{materiel.libelle}}
+                        <div id="delete-{{materiel.id}}" title="Supprimer le materiel {{materiel.libelle}}" class="float-end mt-1" type="submit"  data-bs-toggle="modal" data-bs-target="#delete_item_{{materiel.id}}"><i class="fa-solid fa-trash iconDelete"></i></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center mb-3">
+                            <img class="materiel-img img-fluid rounded" {% if materiel.image %} src="{{ asset(uploads_images ~ materiel.image) }}" {% else %} src="{{ asset(uploads_images ~ 'materiel_base.png') }}"{% endif %} alt="image du materiel">
+                        </div>
+                        <span>Catégorie : <span class="text-color">{{materiel.categorie}}</span></span>
+                        <div class="row">
+                            <span class="col col-md-auto disponibilite d-flex align-items-center">Disponibilité&nbsp: {% if materiel.disponible == 1 %} <i class="fa-solid fa-check iconValid"> {% else %} <i class="fa-solid fa-xmark iconUnvalid"> {% endif %} </i></span>
+                            <span class="col col-md-auto reservation d-flex align-items-center">Réservation&nbsp: {% if materiel.reservation == 1 %} <i class="fa-solid fa-check iconValid"> {% else %} <i class="fa-solid fa-xmark iconUnvalid"> {% endif %} </i> </span>
+                        </div>
+                        
+                        <a href="{{ path('backoffice_edit_materiel', { 'id': materiel.id }) }}" class="btn btn-primary btn-color mt-2">Éditer</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade formItem" id="delete_item_{{materiel.id}}" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Supprimer ce materiel ?</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <a href="{{path('backoffice_delete_materiel', { 'id': materiel.id })}}" type="button" class="btn btn-danger" id="valid_delete">Supprimer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="d-flex justify-content-center">{{ knp_pagination_render(materiels) }}</div>
+	</div>
+
+    
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block body %}
+	{{ parent() }}
+	<h1 class="titre">Backoffice - GMI</h1>
+
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('backoffice') }}">Accueil</a></li>
+			<li class="breadcrumb-item"><a href="{{ path('backoffice_materiels') }}">Matériels</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Édition - {{materiel.libelle}}</li>
+		</ol>
+	</nav>
+
+    <div class="main">
+        <h3>Éditer un matériel</h3>
+
+		{{ form_start(form) }}
+            <div class="my-custom-class-for-errors">
+                {{ form_errors(form) }}
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.libelle) }}
+                    {{ form_row(form.categorie) }}
+                    {{ form_row(form.disponible) }}
+                    {{ form_row(form.reservation) }}
+                    <img class="preview-image mb-2"{% if materiel.image %} src="{{ asset(uploads_images ~ materiel.image) }}" {% else %} src="{{ asset(uploads_images ~ 'materiel_base.png') }}"{% endif %} alt="preview de l'image du matériel">
+                    {{ form_row(form.file) }}
+                </div>
+            </div>
+        {{ form_end(form) }}
+	</div>
+{% endblock %}

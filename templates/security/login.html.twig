@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="login">
+    <div class="logo">
+        <img src="{{ asset('assets/images/Logo_Projet1_DM.png') }}" alt="Logo de l'interface web">
+    </div>
+    <div class="formulaire">
+        <form style="z-index: 3" method="post">
+
+            {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+            {% if app.user %}
+                <div class="mb-3">
+                    Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
+                </div>
+            {% endif %}
+
+            <div class="identifiant">
+                <i class="fa-solid fa-user icon"></i>
+                <input type="text" class="input" name="_username" id="inputEmail" placeholder="Identifiant" required>
+            </div>
+
+            <div class="password">
+                <i class="fa-solid fa-lock icon"></i>
+                <input type="password" class="input" name="_password" id="inputPassword" placeholder="Mot de passe" required>
+            </div>
+
+            <button type="submit" class="valid">LOGIN</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

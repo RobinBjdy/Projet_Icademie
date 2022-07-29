@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{{ parent() }}
+	
+	{% include 'includes/nav.html.twig' %}
+
+	<h1 class="titre">{{titre}}</h1>
+
+	<div class="legende">
+		<span>Matériel</span>
+		<span>Catégorie</span>
+		<span>Disponibilité/Réservation</span>
+		<span>Libelle</span>
+	</div>
+	
+	{% for materiel in materiels %}
+		<a id="{{materiel.id}}" class="item text-decoration-none" href="{{ path('materiel', { 'id': materiel.id }) }}">
+			<span><img class="image" {% if materiel.image %} src="{{ asset(uploads_images ~ materiel.image) }}" {% else %} src="{{ asset(uploads_images ~ 'materiel_base.png') }}"{% endif %} alt="image du materiel"></span>
+			<span data-label="Catégorie :" class="categorie">{{materiel.categorie.libelle}}</span>
+			<div class="dispo">
+				<span class="disponibilite d-flex align-items-center">Disponibilité {% if materiel.disponible == 1 %} <i class="fa-solid fa-check iconValid mt-1"> {% else %} <i class="fa-solid fa-xmark iconUnvalid mt-1"> {% endif %} </i></span>
+				<span class="reservation d-flex align-items-center">Réservation {% if materiel.reservation == 1 %} <i class="fa-solid fa-check iconValid mt-1"> {% else %} <i class="fa-solid fa-xmark iconUnvalid mt-1"> {% endif %} </i> </span>
+			</div>
+			<span data-label="Libelle :" class="libelle">{{materiel.libelle }}</span>
+		</a>
+	{% endfor %}
+
+	<div class="d-flex justify-content-center">{{ knp_pagination_render(materiels) }}</div>
+
+{% endblock %}
+
+{% block footer %}
+	{% include 'includes/footer.html.twig' %}
+{% endblock %}

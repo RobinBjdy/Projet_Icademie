@@ -1,0 +1,80 @@
+<img class="logoNav" src="{{ asset('assets/images/Logo_Projet1_DM.png') }}" alt="Logo de l'interface web">
+
+<nav class="nav-bar">
+    <ul>
+        <li class="crumb">
+            <a href="{{ path('accueil') }}">Accueil</a>
+        </li>
+        <li class="crumb">
+            <a href="{{ path('projet_2') }}">Liste (PROJET 2)</a>
+        </li>
+        <li class="crumb">
+            <div class="dropdown">
+                <a class="dropbtn">Matériels
+                    <i class="fa fa-caret-down"></i>
+                </a>
+                <div class="dropdown-content">
+                    <a href="{{ path('categorie', { 'id': '1' }) }}">Réseau</a>
+                    <a href="{{ path('categorie', { 'id': '2' }) }}">Téléphonique</a>
+                    <a href="{{ path('categorie', { 'id': '3' }) }}">Réunion</a>
+                    <a href="{{ path('categorie', { 'id': '4' }) }}">Desktop</a>
+                </div>
+            </div>
+        </li>
+        <li class="crumb">
+            <div class="dropdown">
+                <a class="dropbtn">Autres</a>
+                <div class="dropdown-content">
+                    <a href="{{ path('mon_compte') }}">Mon compte</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('backoffice') }}">Backoffice</a>
+                    {% endif %}
+                    <a href="{{ path('app_logout') }}">Déconnexion<i style="margin-left: 10px" class="fa-solid fa-right-from-bracket"></i></a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</nav>
+
+<div class="toggle">
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+<div class="nav-bar_tel">
+    <div class="nav">
+        <a href="{{ path('accueil') }}">Accueil</a>
+        <a href="{{ path('projet_2') }}">Liste (PROJET 2)</a>
+        <div class="dropdown">
+            <a class="dropbtn">Matériels
+                <i class="fa fa-caret-down"></i>
+            </a>
+            <div class="dropdown-content">
+                <a href="{{ path('categorie', { 'id': '1' }) }}">Réseau</a>
+                <a href="{{ path('categorie', { 'id': '2' }) }}">Téléphonique</a>
+                <a href="{{ path('categorie', { 'id': '3' }) }}">Réunion</a>
+                <a href="{{ path('categorie', { 'id': '4' }) }}">Desktop</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <a class="dropbtn">Autres</a>
+            <div class="dropdown-content">
+                <a href="{{ path('mon_compte') }}">Mon compte</a>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('backoffice') }}">Backoffice</a>
+                {% endif %}
+                <a href="../index.php">Déconnexion<i style="margin-left: 10px" class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let menutoggle = document.querySelector('.toggle');
+    let menuNav = document.querySelector('.nav-bar_tel');
+    menutoggle.onclick = function () {
+    menutoggle.classList.toggle('active')
+    menuNav.classList.toggle('active')
+    }
+</script>
