@@ -139,8 +139,12 @@ class MainController extends AbstractController
                     return new Response("Ce materiel possède déjà une réservation dans le créneau souhaité", 500);
                 }
 
+                if(!$this->creneauValid($debut, $fin)){
+                    return new Response("Vous ne pouvez pas faire une réservation sur un jour déjà passé", 500);
+                }
+
                 try{
-                    $googleEvent = $calendarHelper->createEvent('robin.projet.icademie@gmail.com', $materiel, 'Réservé par ' . $this->getUser(), $debut, $fin);
+                    $googleEvent = $calendarHelper->createEvent('robin.projet.icademie@gmail.com', $materiel->getLibelle(), 'Réservé par ' . $this->getUser(), $debut, $fin);
                 }catch(Exception $e){
                     return new Response($e->getMessage(), 500);
                 }
@@ -306,7 +310,7 @@ class MainController extends AbstractController
                 }
 
                 try{
-                    $calendarHelper->updateEvent($laReservation->getIdEventGoogle(), 'robin.projet.icademie@gmail.com', $laReservation->getIdMateriel()->getLibelle(), 'Réservé par ' . $this->getUser(), $debut, $fin);
+                    $calendarHelper->updateEvent($laReservation->getIdEventGoogle(), 'robin.projet.icademie@gmail.com', $laReservation->getIdMateriel()->getLibelle(), 'Réservé par ' . $laReservation->getIdUser(), $debut, $fin);
                 }catch(Exception $e){
                     return new Response($e->getMessage(), 500);
                 }
@@ -342,6 +346,14 @@ class MainController extends AbstractController
             if($debut < $reserv->getDebut() && $fin > $reserv->getFin()){
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    public function creneauValid($debut, $fin){
+        if($debut < new \DateTime() && $fin < new \DateTime()){
+            return false;
         }
 
         return true;
